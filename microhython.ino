@@ -12,7 +12,7 @@
     -------------------------------------------------------------------------------
     This program require an Arduino UNO, a Nokia 5110 LCD and 5 buttons.
     -------------------------------------------------------------------------------
-    pupc.ino - Main ino file for this project
+    microhython.ino - Main ino file for this project
     Date created 13/2/2021
     Edited using Arduino IDE
 */
