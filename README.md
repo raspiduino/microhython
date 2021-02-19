@@ -1,2 +1,1 @@
-# pupc
-Portable MicroPython computer with esp8266 and Arduino
+# Microhython - Python in your hand!
