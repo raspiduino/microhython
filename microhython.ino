@@ -132,7 +132,7 @@ void updatecontrolpage(int current_select);
 
 void setup() {
     // Begin serial communication with esp8266
-    esp8266.begin(9600); // Baud 9600
+    esp8266.begin(4800); // Baud 4800
 
     // Reset esp8266 (esp8266's RST pin is connected to Arduino's digital pin 2)
     pinMode(2, OUTPUT); // Set the pin 2 to be output
