@@ -58,6 +58,7 @@ AltSoftSerial esp8266;
 #define DC 16
 #define DIN 17
 #define CLK 18
+#define VCC 19
 
 // Create an instance of LCD class
 PCD8544 lcd(RST,CS,DC,DIN,CLK); //Setup lcd pin: RST, CS, DC, DIN, CLK.
@@ -132,7 +133,7 @@ void updatecontrolpage(int current_select);
 
 void setup() {
     // Begin serial communication with esp8266
-    esp8266.begin(4800); // Baud 4800
+    esp8266.begin(9600); // Baud 9600
 
     // Reset esp8266 (esp8266's RST pin is connected to Arduino's digital pin 2)
     pinMode(2, OUTPUT); // Set the pin 2 to be output
@@ -140,6 +141,10 @@ void setup() {
     digitalWrite(2, LOW);
     digitalWrite(2, HIGH);
 
+    // Power on the LCD
+    pinMode(VCC, OUTPUT);
+    digitalWrite(VCC, HIGH);
+    
     // Start the lcd
     lcd.ON(); // Turn on the LCD 
     lcd.SET(contrast, negative, rotation, mirror, bias); // Setup the LCD settings   
@@ -180,13 +185,13 @@ void loop() {
         // If not displaying virtual keyboard menu -> in terminal
         if (digitalRead(BUTTON_UP) == LOW){
             // If 'UP' button pressed -> Scroll the terminal up
-            esp8266.println(":UP");
+            esp8266.println("microhython_up()");
             delay(debouncetime);
         }
         
         if (digitalRead(BUTTON_DOWN) == LOW){
             // If 'DOWN' button is pressed -> Scroll the terminal down
-            esp8266.println(":DOWN");
+            //esp8266.println("microhython_down()");
             delay(debouncetime);
         }
 
@@ -329,7 +334,7 @@ void controlpage(){
                 // Send the data to the serial esp8266 and back to terminal
                 esp8266.println(command); // Send command to serial
                 vkeyboard = false;
-                esp8266.println(":DOWN");
+                //esp8266.println("microhython_down()");
                 // User interface flags
                 page = 1;
                 current_key = 32;
@@ -537,9 +542,11 @@ void controlkeyboard(){
 
 void displayterminal(int incomingByte){
     // Displaying the key from esp8266 to terminal
-    if (incomingByte == 13){
-        termx = 0;
-        termy = termy + 8;
+    if (incomingByte == 10 | incomingByte == 13){
+        if (incomingByte == 10){
+            termx = 0;
+            termy = termy + 8;
+        }
     }
     
     else{
@@ -564,7 +571,7 @@ void displayterminal(int incomingByte){
                     lcd.Display();
                     termx = 0;
                     termy = 0;
-                    esp8266.println(":DOWN"); // Reshow the LCD
+                    //esp8266.println("microhython_down()"); // Reshow the LCD
                 }
             }
         }
